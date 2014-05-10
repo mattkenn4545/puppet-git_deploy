@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+import logging
+import fileinput
+from subprocess import check_call, CalledProcessError
+
+logging.basicConfig(filename='/var/log/git_deploy/<%= @name %>.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
+destination = '<%= @destination %>'
+
+for line in fileinput.input():
+    parent, child, refname = line.replace('\n', '').split(' ')
+    branch = refname.split('/')[-1]
+    base_cmd = 'git --work-tree {0} --git-dir {0}/.git'.format(destination)
+
+    msg = 'Starting deploy'
+    logging.info(msg)
+    print msg
+
+    try:
+        check_call('{0} fetch --all'.format(base_cmd), shell=True)
+        check_call('{0} reset --hard origin/{1}'.format(base_cmd, branch), shell=True)
+    except CalledProcessError as e:
+        print e
+        logging.exception(e)
+        #TODO NOTIFY WHEN THIS OCCURS (EMAIL)
+
+    msg = "Deploy complete '{0}'/{1} to ref {2}".format(destination, branch, child[:7])
+    logging.info(msg)
+    print msg
