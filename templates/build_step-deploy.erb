@@ -1,0 +1,2 @@
+if ! git remote | grep <%= @name %>; then git remote add <%= @name %> git@<%= @fqdn %>:<%= @full_project_path %>; fi
+git push <%= @name %> master

@@ -52,4 +52,9 @@ define git_deploy::project (
     group       => 'git',
     content     => template("${module_name}/post-receive")
   }
+
+  @@auto_jenkin::build_step{ "${hostname}-${name}-deploy":
+    job         => "${hostname}-${name}",
+    command     => template("${module_name}/build_step-deploy.erb")
+  }
 }
