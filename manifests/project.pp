@@ -53,8 +53,10 @@ define git_deploy::project (
     content     => template("${module_name}/post-receive")
   }
 
-  @@auto_jenkin::build_step{ "${hostname}-${name}-deploy":
-    job         => "${hostname}-${name}",
-    command     => template("${module_name}/build_step-deploy.erb")
+  if (defined('auto_jenkin')) {
+    @@auto_jenkin::build_step{ "${hostname}-${name}-deploy":
+      job         => "${hostname}-${name}",
+      command     => template("${module_name}/build_step-deploy.erb")
+    }
   }
 }
