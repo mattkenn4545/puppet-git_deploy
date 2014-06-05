@@ -1,22 +1,18 @@
 define git_deploy::project (
   $destination,
-  $git_user_groups = []
+  $git_user_group = undef
 ) {
   include git_deploy
 
   $project_path       = $git_deploy::project_path
   $full_project_path  = "${project_path}/${name}.git"
 
-  if ($git_user_groups != []) {
-    $destination_group = $git_user_groups[0]
-  } else {
-    $destination_group = 'root'
-  }
-
   if !(defined(File [ $destination ])) {
     file { $destination:
       ensure    => directory,
-      group     => $destination_groups
+      group     => $git_user_group ? {
+                        undef     => 'root',
+                        default   => $git_user_group }
     }
   }
 
@@ -24,10 +20,10 @@ define git_deploy::project (
     mode        => '0770'
   }
 
-
-
-  User <| title == 'git' |> {
-    groups      => $git_user_groups
+  if ($git_user_group) {
+    User <| title == 'git' |> {
+      groups      => [ $git_user_group ]
+    }
   }
 
   User[ 'git' ] ->
