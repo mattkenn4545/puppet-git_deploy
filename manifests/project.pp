@@ -7,9 +7,17 @@ define git_deploy::project (
   $project_path       = $git_deploy::project_path
   $full_project_path  = "${project_path}/${name}.git"
 
+  if !(defined(File [ $destination ])) {
+    file { $destination:
+      ensure    => directory
+    }
+  }
+
   File <| title == $destination |> {
     mode        => '0770'
   }
+
+
 
   User <| title == 'git' |> {
     groups      => $git_user_groups
