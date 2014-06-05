@@ -29,7 +29,7 @@ define git_deploy::project (
     creates     => "${destination}/.git",
     user        => 'git',
     command     => 'git init',
-    require     => Package[ 'git' ]
+    require     => [ Package[ 'git' ], File [ $destination ] ]
   } ~>
   exec { "${name} git remote add":
     cwd         => $destination,
