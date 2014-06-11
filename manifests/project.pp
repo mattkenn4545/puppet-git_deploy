@@ -9,15 +9,15 @@ define git_deploy::project (
 
   if !(defined(File [ $destination ])) {
     file { $destination:
-      ensure    => directory,
-      group     => $git_user_group ? {
-                        undef     => 'root',
-                        default   => $git_user_group }
+      ensure    => directory
     }
   }
 
   File <| title == $destination |> {
-    mode        => '0770'
+    mode        => '0770',
+    group       => $git_user_group ? {
+                    undef     => 'root',
+                    default   => $git_user_group }
   }
 
   if ($git_user_group) {
