@@ -20,6 +20,7 @@ for line in fileinput.input():
     try:
         check_call('{0} fetch --all'.format(base_cmd), shell=True)
         check_call('{0} reset --hard origin/{1}'.format(base_cmd, branch), shell=True)
+        check_call('{0} clean -f -x -d'.format(base_cmd), shell=True)
     except CalledProcessError as e:
         print e
         logging.exception(e)
