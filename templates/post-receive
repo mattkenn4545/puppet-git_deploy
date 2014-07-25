@@ -27,11 +27,8 @@ for line in fileinput.input():
         msg = "******************************************Deploy FAILED******************************************"
         logging.info(msg)
         print msg
-
-        return
         #TODO NOTIFY WHEN THIS OCCURS (EMAIL)
-
-    msg = "Deploy complete '{0}'/{1} to ref {2}".format(destination, branch, child[:7])
-    logging.info(msg)
-    print msg
-
+    else:
+        msg = "Deploy complete '{0}'/{1} to ref {2}".format(destination, branch, child[:7])
+        logging.info(msg)
+        print msg
